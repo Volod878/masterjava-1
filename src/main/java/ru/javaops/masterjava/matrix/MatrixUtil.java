@@ -1,7 +1,9 @@
 package ru.javaops.masterjava.matrix;
 
 import java.util.Random;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -12,10 +14,8 @@ public class MatrixUtil {
 
     // TODO implement parallel multiplication matrixA*matrixB
     public static int[][] concurrentMultiply(int[][] matrixA, int[][] matrixB, ExecutorService executor) throws InterruptedException, ExecutionException {
-        final int matrixSize = matrixA.length;
-        final int[][] matrixC = new int[matrixSize][matrixSize];
-
-        return matrixC;
+        final CompletionService<int[][]> completionService = new ExecutorCompletionService<>(executor);
+        return completionService.submit(() -> singleThreadMultiply(matrixA, matrixB)).get();
     }
 
     // TODO optimize by https://habrahabr.ru/post/114797/
@@ -23,14 +23,24 @@ public class MatrixUtil {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
 
-        for (int i = 0; i < matrixSize; i++) {
-            for (int j = 0; j < matrixSize; j++) {
-                int sum = 0;
-                for (int k = 0; k < matrixSize; k++) {
-                    sum += matrixA[i][k] * matrixB[k][j];
+        int[] thatColumn = new int[matrixSize];
+
+        try {
+            for (int i = 0; i < matrixSize; i++) {
+                for (int j = 0; j < matrixSize; j++) {
+                    thatColumn[j] = matrixB[j][i];
                 }
-                matrixC[i][j] = sum;
+
+                for (int x = 0; x < matrixSize; x++) {
+                    int[] thisRow = matrixA[x];
+                    int sum = 0;
+                    for (int y = 0; y < matrixSize; y++) {
+                        sum += thisRow[y] * thatColumn[y];
+                    }
+                    matrixC[x][i] = sum;
+                }
             }
+        } catch (IndexOutOfBoundsException ignored) {
         }
         return matrixC;
     }
