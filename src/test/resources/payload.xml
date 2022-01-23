@@ -17,4 +17,18 @@
         <City id="kiv">Киев</City>
         <City id="mnsk">Минск</City>
     </Cities>
+    <Projects>
+        <Project group="top">
+            <name>topjava</name>
+            <description>Course TopJava</description>
+        </Project>
+        <Project group="master">
+            <name>masterjava</name>
+            <description>Course MasterJava</description>
+        </Project>
+    </Projects>
+    <Groups>
+        <Group id="top" groupFlagType="finished">TopJava</Group>
+        <Group id="master" groupFlagType="current">MasterJava</Group>
+    </Groups>
 </Payload>
