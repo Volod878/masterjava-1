@@ -42,6 +42,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Project }
+     * 
+     */
+    public Project createProject() {
+        return new Project();
+    }
+
+    /**
      * Create an instance of {@link User }
      * 
      */
@@ -71,6 +79,14 @@ public class ObjectFactory {
      */
     public CityType createCityType() {
         return new CityType();
+    }
+
+    /**
+     * Create an instance of {@link Group }
+     * 
+     */
+    public Group createGroup() {
+        return new Group();
     }
 
     /**
